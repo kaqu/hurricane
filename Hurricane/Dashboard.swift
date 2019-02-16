@@ -58,7 +58,7 @@ public enum Dashboard: ModuleDescription {
 
     public static var initialization: [Message] = []
 
-    public static func interpreter() -> Interpreter {
+    public static var interpreter: Interpreter {
         return { message in
             switch message {
                 case .prepareDetail:

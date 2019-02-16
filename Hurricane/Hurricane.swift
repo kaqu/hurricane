@@ -3,14 +3,13 @@ import Foundation
 public protocol ModuleDescription {
     typealias Module = ModuleInstance<Self>
 
-    associatedtype View
     associatedtype State
 
     associatedtype Message
     typealias Action = (inout State) -> [Work]
     typealias Interpreter = (Message) -> Action
 
-    static func interpreter() -> Interpreter
+    static var interpreter: Interpreter { get }
 
     associatedtype Context
     typealias Callback = (Message) -> Void
@@ -27,7 +26,7 @@ public protocol ModuleDescription {
 extension ModuleDescription {
     public static var initialization: [Message] { return [] }
     public static func instantiate(with state: State, in context: Context, using executor: ModuleExecutor = DispatchQueue(label: "\(Self.self) Executor")) -> ModuleInstance<Self> {
-        return .init(state: state, interpreter: Self.interpreter(), worker: Self.worker(inContext: context), executor: executor)
+        return .init(state: state, interpreter: Self.interpreter, worker: Self.worker(inContext: context), executor: executor)
     }
 }
 
@@ -66,7 +65,7 @@ public final class ModuleInstance<Description: ModuleDescription> {
             self?.recieve(message)
         }
     }
-
+    
     private let queueLock: NSRecursiveLock = .init()
     private var actionQueue: [Action] = []
     private func enqueue(_ action: @escaping Action) {

@@ -24,8 +24,7 @@ public enum Root: ModuleDescription {
             self.mainWindow = mainWindow
         }
     }
-
-    public static func interpreter() -> Interpreter {
+    public static var interpreter: Interpreter {
         return { message in
             switch message {
                 case .prepareDashboard:

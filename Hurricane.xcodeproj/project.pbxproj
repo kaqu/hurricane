@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		406EA9D6221765AE003B9B79 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406EA9D5221765AE003B9B79 /* Detail.swift */; };
+		406EA9DE221772AE003B9B79 /* HurricaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406EA9DD221772AE003B9B79 /* HurricaneTests.swift */; };
+		406EA9E6221772C6003B9B79 /* DashboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406EA9E5221772C6003B9B79 /* DashboardTests.swift */; };
+		406EA9E8221772D6003B9B79 /* DetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406EA9E7221772D6003B9B79 /* DetailTests.swift */; };
+		406EA9EA221772EE003B9B79 /* RootTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406EA9E9221772EE003B9B79 /* RootTests.swift */; };
 		42B3E9EE2217509C0000A201 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3E9ED2217509C0000A201 /* AppDelegate.swift */; };
 		42B3E9F52217509D0000A201 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42B3E9F42217509D0000A201 /* Assets.xcassets */; };
 		42B3E9F82217509D0000A201 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42B3E9F62217509D0000A201 /* LaunchScreen.storyboard */; };
@@ -16,8 +20,24 @@
 		42B3EA04221750D60000A201 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B3EA03221750D60000A201 /* Dashboard.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		406EA9E0221772AE003B9B79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 42B3E9E22217509C0000A201 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42B3E9E92217509C0000A201;
+			remoteInfo = Hurricane;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		406EA9D5221765AE003B9B79 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
+		406EA9DB221772AE003B9B79 /* HurricaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HurricaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		406EA9DD221772AE003B9B79 /* HurricaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HurricaneTests.swift; sourceTree = "<group>"; };
+		406EA9DF221772AE003B9B79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		406EA9E5221772C6003B9B79 /* DashboardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardTests.swift; sourceTree = "<group>"; };
+		406EA9E7221772D6003B9B79 /* DetailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTests.swift; sourceTree = "<group>"; };
+		406EA9E9221772EE003B9B79 /* RootTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTests.swift; sourceTree = "<group>"; };
 		42B3E9EA2217509C0000A201 /* Hurricane.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hurricane.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42B3E9ED2217509C0000A201 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42B3E9F42217509D0000A201 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -29,6 +49,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		406EA9D8221772AE003B9B79 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B3E9E72217509C0000A201 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -39,10 +66,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		406EA9DC221772AE003B9B79 /* HurricaneTests */ = {
+			isa = PBXGroup;
+			children = (
+				406EA9DD221772AE003B9B79 /* HurricaneTests.swift */,
+				406EA9DF221772AE003B9B79 /* Info.plist */,
+				406EA9E9221772EE003B9B79 /* RootTests.swift */,
+				406EA9E5221772C6003B9B79 /* DashboardTests.swift */,
+				406EA9E7221772D6003B9B79 /* DetailTests.swift */,
+			);
+			path = HurricaneTests;
+			sourceTree = "<group>";
+		};
 		42B3E9E12217509C0000A201 = {
 			isa = PBXGroup;
 			children = (
 				42B3E9EC2217509C0000A201 /* Hurricane */,
+				406EA9DC221772AE003B9B79 /* HurricaneTests */,
 				42B3E9EB2217509C0000A201 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -51,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				42B3E9EA2217509C0000A201 /* Hurricane.app */,
+				406EA9DB221772AE003B9B79 /* HurricaneTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +114,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		406EA9DA221772AE003B9B79 /* HurricaneTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 406EA9E2221772AE003B9B79 /* Build configuration list for PBXNativeTarget "HurricaneTests" */;
+			buildPhases = (
+				406EA9D7221772AE003B9B79 /* Sources */,
+				406EA9D8221772AE003B9B79 /* Frameworks */,
+				406EA9D9221772AE003B9B79 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				406EA9E1221772AE003B9B79 /* PBXTargetDependency */,
+			);
+			name = HurricaneTests;
+			productName = HurricaneTests;
+			productReference = 406EA9DB221772AE003B9B79 /* HurricaneTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		42B3E9E92217509C0000A201 /* Hurricane */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 42B3E9FC2217509D0000A201 /* Build configuration list for PBXNativeTarget "Hurricane" */;
@@ -100,6 +159,10 @@
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = Miquido;
 				TargetAttributes = {
+					406EA9DA221772AE003B9B79 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 42B3E9E92217509C0000A201;
+					};
 					42B3E9E92217509C0000A201 = {
 						CreatedOnToolsVersion = 10.1;
 					};
@@ -119,11 +182,19 @@
 			projectRoot = "";
 			targets = (
 				42B3E9E92217509C0000A201 /* Hurricane */,
+				406EA9DA221772AE003B9B79 /* HurricaneTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		406EA9D9221772AE003B9B79 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B3E9E82217509C0000A201 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -136,6 +207,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		406EA9D7221772AE003B9B79 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				406EA9E6221772C6003B9B79 /* DashboardTests.swift in Sources */,
+				406EA9EA221772EE003B9B79 /* RootTests.swift in Sources */,
+				406EA9E8221772D6003B9B79 /* DetailTests.swift in Sources */,
+				406EA9DE221772AE003B9B79 /* HurricaneTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		42B3E9E62217509C0000A201 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -150,6 +232,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		406EA9E1221772AE003B9B79 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42B3E9E92217509C0000A201 /* Hurricane */;
+			targetProxy = 406EA9E0221772AE003B9B79 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		42B3E9F62217509D0000A201 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -162,6 +252,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		406EA9E3221772AE003B9B79 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = HurricaneTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kaqu.HurricaneTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hurricane.app/Hurricane";
+			};
+			name = Debug;
+		};
+		406EA9E4221772AE003B9B79 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = HurricaneTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kaqu.HurricaneTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hurricane.app/Hurricane";
+			};
+			name = Release;
+		};
 		42B3E9FA2217509D0000A201 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -321,6 +449,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		406EA9E2221772AE003B9B79 /* Build configuration list for PBXNativeTarget "HurricaneTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				406EA9E3221772AE003B9B79 /* Debug */,
+				406EA9E4221772AE003B9B79 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		42B3E9E52217509C0000A201 /* Build configuration list for PBXProject "Hurricane" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
