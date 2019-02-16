@@ -1,71 +1,71 @@
 import Foundation
 
+public protocol ModuleOperation {
+    associatedtype Module: ModuleDescription where Module.Operation == Self
+    var action: Module.Action { get }
+}
+
+public protocol ModuleWork {
+    associatedtype Module: ModuleDescription where Module.Work == Self
+    var task: Module.Task { get }
+}
+
 public protocol ModuleDescription {
     typealias Module = ModuleInstance<Self>
 
     associatedtype State
-
-    associatedtype Message
-    typealias Action = (inout State) -> [Work]
-    typealias Interpreter = (Message) -> Action
-
-    static var interpreter: Interpreter { get }
-
     associatedtype Context
-    typealias Callback = (Message) -> Void
 
-    associatedtype Work
-    typealias Worker = (Work, @escaping Callback) -> Void
+    typealias Action = (inout State) -> [Work]
+    associatedtype Operation: ModuleOperation where Operation.Module == Self
 
-    static func worker(inContext context: Context) -> Worker
+    typealias Callback = (Operation) -> Void
+    typealias Task = (Context, @escaping Callback) -> Void
+    associatedtype Work: ModuleWork where Work.Module == Self
 
-    static var initialization: [Message] { get }
+    static var initialization: [Operation] { get }
     static func instantiate(with state: State, in context: Context, using executor: ModuleExecutor) -> ModuleInstance<Self>
 }
 
 extension ModuleDescription {
-    public static var initialization: [Message] { return [] }
+    public static var initialization: [Operation] { return [] }
     public static func instantiate(with state: State, in context: Context, using executor: ModuleExecutor = DispatchQueue(label: "\(Self.self) Executor")) -> ModuleInstance<Self> {
-        return .init(state: state, interpreter: Self.interpreter, worker: Self.worker(inContext: context), executor: executor)
+        return .init(state: state, context: context, executor: executor)
     }
 }
 
 public final class ModuleInstance<Description: ModuleDescription> {
     public typealias State = Description.State
-
-    public typealias Message = Description.Message
-    public typealias Action = Description.Action
-    public typealias Interpreter = Description.Interpreter
-
     public typealias Context = Description.Context
+
+    public typealias Action = Description.Action
+    public typealias Operation = Description.Operation
+
     public typealias Callback = Description.Callback
     public typealias Work = Description.Work
-    public typealias Worker = Description.Worker
+    public typealias Task = Description.Task
 
     private var state: State
-
-    private let interpreter: Interpreter
-    private let worker: Worker
+    private let context: Context
     private let executor: ModuleExecutor
 
-    public init(state: State, interpreter: @escaping Interpreter, worker: @escaping Worker, executor: ModuleExecutor) {
+    public init(state: State, context: Context, executor: ModuleExecutor) {
         self.state = state
-        self.interpreter = interpreter
-        self.worker = worker
+        self.context = context
         self.executor = executor
-        Description.initialization.forEach(recieve)
+        Description.initialization.forEach(perform)
     }
 
-    public func recieve(_ message: Message) {
-        enqueue(interpreter(message))
+    public func perform(_ operation: Operation) {
+        enqueue(operation.action)
     }
 
-    public func weakReciever() -> (Message) -> Void {
-        return { [weak self] message in
-            self?.recieve(message)
+    public func weakPerform() -> (Operation) -> Void {
+        return { [weak self] operation in
+            self?.perform(operation)
         }
     }
-    
+
     private let queueLock: NSRecursiveLock = .init()
     private var actionQueue: [Action] = []
     private func enqueue(_ action: @escaping Action) {
@@ -95,8 +95,8 @@ public final class ModuleInstance<Description: ModuleDescription> {
             }()) {
                 let action = self.actionQueue.removeFirst()
                 self.queueLock.unlock()
-                for task in action(&self.state) {
-                    self.worker(task, { [weak self] message in self?.recieve(message) })
+                for work in action(&self.state) {
+                    work.task(self.context, self.weakPerform())
                 }
             }
         }
@@ -108,11 +108,11 @@ public protocol ModuleExecutor {
 }
 
 public struct InstantExecutor: ModuleExecutor {
+    public init() {}
+
     public func execute(_ closure: @escaping () -> Void) {
         closure()
     }
-
-    public init() {}
 }
 
 extension DispatchQueue: ModuleExecutor {

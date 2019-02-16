@@ -2,7 +2,7 @@ import UIKit
 
 public enum Dashboard: ModuleDescription {
     public final class View: UIViewController {
-        internal var interactor: ((Message) -> Void)?
+        internal var interactor: ((Operation) -> Void)?
 
         public override func loadView() {
             super.loadView()
@@ -25,12 +25,42 @@ public enum Dashboard: ModuleDescription {
         }
     }
 
+    public struct Presenter {
+        fileprivate let showViewController: (UIViewController) -> Void
+        fileprivate let backToSelf: () -> Void
+
+        public init(showViewController: @escaping (UIViewController) -> Void, backToSelf: @escaping () -> Void) {
+            self.showViewController = showViewController
+            self.backToSelf = backToSelf
+        }
+
+        public init(dashboardView: Dashboard.View) {
+            self.showViewController = {
+                dashboardView.show($0, sender: nil)
+            }
+            self.backToSelf = {
+                if dashboardView.presentedViewController != nil {
+                    dashboardView.dismiss(animated: true, completion: nil)
+                } else {
+                    dashboardView.navigationController?.popToViewController(dashboardView, animated: true)
+                }
+            }
+        }
+    }
+
     public struct State {
         fileprivate var detailModule: Detail.Module?
         public init() {}
     }
 
-    public enum Message {
+    public struct Context {
+        fileprivate let presenter: Presenter
+        public init(presenter: Presenter) {
+            self.presenter = presenter
+        }
+    }
+
+    public enum Operation {
         case prepareDetail
         case setupDetail(Detail.Module, view: Detail.View)
         case backFromDetail
@@ -48,51 +78,38 @@ public enum Dashboard: ModuleDescription {
             case buildDetail(Detail.State)
         }
     }
+}
 
-    public struct Context {
-        fileprivate let view: View
-        public init(view: View) {
-            self.view = view
-        }
-    }
-
-    public static var initialization: [Message] = []
-
-    public static var interpreter: Interpreter {
-        return { message in
-            switch message {
+extension Dashboard.Operation: ModuleOperation {
+    public typealias Module = Dashboard
+    public var action: Dashboard.Action {
+        return { state in
+            switch self {
                 case .prepareDetail:
-                    return { _ in
-                        [.perform(.buildDetail(Detail.State()))]
-                    }
+                    return [.perform(.buildDetail(Detail.State()))]
                 case let .setupDetail(module, view):
-                    return { state in
-                        state.detailModule = module
-                        return [.present(.show(viewController: view))]
-                    }
+                    state.detailModule = module
+                    return [.present(.show(viewController: view))]
                 case .backFromDetail:
-                    return { state in
-                        state.detailModule = nil
-                        return [.present(.backToSelf)]
-                    }
+                    state.detailModule = nil
+                    return [.present(.backToSelf)]
             }
         }
     }
+}
 
-    public static func worker(inContext context: Context) -> Worker {
-        return { task, callback in
-            switch task {
+extension Dashboard.Work: ModuleWork {
+    public typealias Module = Dashboard
+    public var task: Dashboard.Task {
+        return { context, callback in
+            switch self {
                 case let .present(presentation):
                     DispatchQueue.main.async {
                         switch presentation {
                             case let .show(viewController):
-                                context.view.show(viewController, sender: nil)
+                                context.presenter.showViewController(viewController)
                             case .backToSelf:
-                                if context.view.presentedViewController != nil {
-                                    context.view.dismiss(animated: true, completion: nil)
-                                } else {
-                                    context.view.navigationController?.popToViewController(context.view, animated: true)
-                                }
+                                context.presenter.backToSelf()
                         }
                     }
                 case let .perform(task):
@@ -101,9 +118,9 @@ public enum Dashboard: ModuleDescription {
                             let detailView: Detail.View = .init()
                             let detailModule: Detail.Module
                                 = Detail.instantiate(with: state,
-                                                     in: Detail.Context(view: detailView,
+                                                     in: Detail.Context(presenter: Detail.Presenter(detailView: detailView),
                                                                         parentInteractor: callback))
-                            detailView.interactor = detailModule.weakReciever()
+                            detailView.interactor = detailModule.weakPerform()
                             callback(.setupDetail(detailModule, view: detailView))
                     }
             }

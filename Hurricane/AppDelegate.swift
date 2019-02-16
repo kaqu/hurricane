@@ -2,10 +2,10 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    let root: Root.Module = Root.instantiate(with: Root.State(), in: Root.Context(), using: InstantExecutor())
+    let root: Root.Module = Root.instantiate(with: Root.State(), in: Root.Context(presenter: Root.Presenter.init()), using: InstantExecutor())
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        root.recieve(.prepareDashboard)
+        root.perform(.prepareDashboard)
         return true
     }
 }

@@ -3,12 +3,34 @@ import UIKit
 public enum Root: ModuleDescription {
     public typealias View = UIWindow
 
+    public struct Presenter {
+        fileprivate let setRootViewController: (UIViewController) -> Void
+        
+        public init(setRootViewController: @escaping (UIViewController) -> Void) {
+            self.setRootViewController = setRootViewController
+        }
+
+        public init(window: UIWindow = .init(frame: UIScreen.main.bounds)) {
+            self.setRootViewController = {
+                window.rootViewController = $0
+                window.makeKeyAndVisible()
+            }
+        }
+    }
+
     public struct State {
         fileprivate var dashboardModule: Dashboard.Module?
         public init() {}
     }
 
-    public enum Message {
+    public struct Context {
+        fileprivate let presenter: Presenter
+        public init(presenter: Presenter) {
+            self.presenter = presenter
+        }
+    }
+
+    public enum Operation {
         case prepareDashboard
         case setupDashboard(Dashboard.Module, view: Dashboard.View)
     }
@@ -17,42 +39,37 @@ public enum Root: ModuleDescription {
         case buildDashboard(Dashboard.State)
         case show(rootViewController: UIViewController)
     }
+}
 
-    public struct Context {
-        fileprivate let mainWindow: UIWindow
-        public init(mainWindow: UIWindow = .init(frame: UIScreen.main.bounds)) {
-            self.mainWindow = mainWindow
-        }
-    }
-    public static var interpreter: Interpreter {
-        return { message in
-            switch message {
+extension Root.Operation: ModuleOperation {
+    public typealias Module = Root
+    public var action: Root.Action {
+        return { state in
+            switch self {
                 case .prepareDashboard:
-                    return { _ in
-                        [.buildDashboard(Dashboard.State())]
-                    }
+                    return [.buildDashboard(Dashboard.State())]
                 case let .setupDashboard(module, view):
-                    return { state in
-                        state.dashboardModule = module
-                        return [.show(rootViewController: UINavigationController(rootViewController: view))]
-                    }
+                    state.dashboardModule = module
+                    return [.show(rootViewController: UINavigationController(rootViewController: view))]
             }
         }
     }
+}
 
-    public static func worker(inContext context: Context) -> Worker {
-        return { task, callback in
-            switch task {
+extension Root.Work: ModuleWork {
+    public typealias Module = Root
+    public var task: Root.Task {
+        return { context, callback in
+            switch self {
                 case let .buildDashboard(state):
                     let dashboardView: Dashboard.View = .init()
                     let dashboardModule: Dashboard.Module
                         = Dashboard.instantiate(with: state,
-                                                in: Dashboard.Context(view: dashboardView))
-                    dashboardView.interactor = dashboardModule.weakReciever()
+                                                in: Dashboard.Context(presenter: Dashboard.Presenter(dashboardView: dashboardView)))
+                    dashboardView.interactor = dashboardModule.weakPerform()
                     callback(.setupDashboard(dashboardModule, view: dashboardView))
                 case let .show(viewController):
-                    context.mainWindow.rootViewController = viewController
-                    context.mainWindow.makeKeyAndVisible()
+                    context.presenter.setRootViewController(viewController)
             }
         }
     }

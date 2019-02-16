@@ -2,7 +2,7 @@ import UIKit
 
 public enum Detail: ModuleDescription {
     public final class View: UIViewController {
-        internal var interactor: ((Message) -> Void)?
+        internal var interactor: ((Operation) -> Void)?
 
         public override func loadView() {
             super.loadView()
@@ -30,12 +30,17 @@ public enum Detail: ModuleDescription {
             interactor?(.back)
         }
     }
+    
+    public struct Presenter {
+        public init(detailView: Detail.View) {
+        }
+    }
 
     public struct State {
         public init() {}
     }
 
-    public enum Message {
+    public enum Operation {
         case bounce
         case back
     }
@@ -52,34 +57,34 @@ public enum Detail: ModuleDescription {
     }
 
     public struct Context {
-        fileprivate let view: View
-        fileprivate let parentInteractor: (Dashboard.Message) -> Void
-        public init(view: View, parentInteractor: @escaping (Dashboard.Message) -> Void) {
-            self.view = view
+        fileprivate let presenter: Presenter
+        fileprivate let parentInteractor: (Dashboard.Operation) -> Void
+        public init(presenter: Presenter, parentInteractor: @escaping (Dashboard.Operation) -> Void) {
+            self.presenter = presenter
             self.parentInteractor = parentInteractor
         }
     }
+}
 
-    public static var initialization: [Message] = []
-
-    public static var interpreter: Interpreter {
-        return { message in
-            switch message {
+extension Detail.Operation: ModuleOperation {
+    public typealias Module = Detail
+    public var action: Detail.Action {
+        return { _ in
+            switch self {
                 case .bounce:
-                    return { _ in
-                        [.perform(.bounce)]
-                    }
+                    return [.perform(.bounce)]
                 case .back:
-                    return { _ in
-                        [.perform(.back)]
-                    }
+                    return [.perform(.back)]
             }
         }
     }
+}
 
-    public static func worker(inContext context: Context) -> Worker {
-        return { task, _ in
-            switch task {
+extension Detail.Work: ModuleWork {
+    public typealias Module = Detail
+    public var task: Detail.Task {
+        return { context, _ in
+            switch self {
                 case let .present(presentation):
                     DispatchQueue.main.async {
                         switch presentation {}
